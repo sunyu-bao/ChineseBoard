@@ -14,7 +14,7 @@ $res = null;
 
 //データベース接続
 try {
-    $pdo = new PDO('mysql:charset=UTF8;dbname=test-board;host=localhost', 'root', 'root');
+    $pdo = new PDO('mysql:dbname=bbs-yt;host=localhost;charset=utf8','root','root');
 } catch (PDOException $e) {
     //接続エラーのときエラー内容を取得する
     $error_message[] = $e->getMessage();
@@ -51,7 +51,7 @@ if (!empty($_POST["submitButton"])) {
         try {
 
             //SQL作成
-            $statment = $pdo->prepare("INSERT INTO comment (username, comment, post_date) VALUES (:username, :comment, :current_date)");
+            $statment = $pdo->prepare("INSERT INTO `bbs-table` (username, comment, post_date) VALUES (:username, :comment, :current_date)");
 
             //値をセット
             $statment->bindParam(':username', $escaped["username"], PDO::PARAM_STR);
@@ -66,6 +66,7 @@ if (!empty($_POST["submitButton"])) {
         } catch (Exception $e) {
             //エラーが発生したときはロールバック(処理取り消し)
             $pdo->rollBack();
+            echo($e);
         }
 
         if ($res) {
@@ -80,7 +81,7 @@ if (!empty($_POST["submitButton"])) {
 
 
 //DBからコメントデータを取得する
-$sql = "SELECT username, comment, post_date FROM comment ORDER BY post_date ASC";
+$sql = "SELECT username, comment, post_date FROM `bbs-table` ORDER BY post_date ASC";
 $message_array = $pdo->query($sql);
 
 
@@ -100,7 +101,7 @@ $pdo = null;
 </head>
 
 <body>
-    <h1 class="title">PHPで掲示板アプリ</h1>
+    <h1 class="title">中国人で掲示板アプリ</h1>
     <hr>
     <div class="boardWrapper">
         <!-- メッセージ送信成功時 -->
